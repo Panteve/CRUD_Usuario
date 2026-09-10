@@ -1,98 +1,177 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# CRUD de Usuarios
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST para gestionar usuarios, desarrollada como parte del Taller Práctico No. 3 de Arquitectura de Software.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+El proyecto utiliza **NestJS**, **TypeScript**, **TypeORM** y **MySQL**. La implementación busca aplicar separación de responsabilidades, inyección de dependencias, DTOs, interfaces y una arquitectura por capas.
 
-## Description
+## Tecnologías
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Node.js
+- NestJS 11
+- TypeScript
+- TypeORM
+- MySQL
+- Jest para pruebas unitarias
 
-## Project setup
+## Arquitectura
 
-```bash
-$ npm install
+El recorrido de una petición es:
+
+```text
+Cliente / Swagger
+        ↓
+UsuariosController
+        ↓
+UsuariosService
+        ↓
+UsuarioRepository
+        ↓
+TypeORM
+        ↓
+MySQL
 ```
 
-## Compile and run the project
+### Responsabilidad de cada capa
 
-```bash
-# development
-$ npm run start
+- **Controller:** recibe las peticiones HTTP y devuelve las respuestas.
+- **Service:** contiene los casos de uso y las reglas de negocio.
+- **Repository:** encapsula las operaciones de persistencia con TypeORM.
+- **Entity:** representa la tabla de usuarios en MySQL.
+- **DTOs:** definen los datos de entrada y salida de la API.
+- **Interfaces:** definen los contratos de los servicios y repositorios.
 
-# watch mode
-$ npm run start:dev
+## Estructura actual
 
-# production mode
-$ npm run start:prod
+```text
+src/
+├── Controllers/
+│   └── usuarios.controller.ts
+├── DTOs/
+│   ├── actualizar-usuario.dto.ts
+│   ├── crear-usuario.dto.ts
+│   └── response-usuario.dto.ts
+├── Entities/
+│   └── usuario.entity.ts
+├── Interfaces/
+│   ├── repository-usuario.interface.ts
+│   └── service-usuario.interface.ts
+├── Repositories/
+│   └── usuario.repository.ts
+├── Services/
+│   └── usuarios.service.ts
+├── modules/
+│   └── usuarios.module.ts
+├── app.module.ts
+└── main.ts
 ```
 
-## Run tests
+## Requisitos previos
 
-```bash
-# unit tests
-$ npm run test
+- Node.js instalado.
+- MySQL instalado y ejecutándose localmente.
+- Una base de datos MySQL creada.
 
-# e2e tests
-$ npm run test:e2e
+## Configuración de MySQL
 
-# test coverage
-$ npm run test:cov
+Actualmente la conexión está configurada en `src/app.module.ts` con estos valores:
+
+```ts
+{
+  type: 'mysql',
+  host: 'localhost',
+  port: 3306,
+  username: 'root',
+  password: 'root',
+  database: 'test',
+}
 ```
 
-## Deployment
+Cambia estos valores según la configuración de MySQL de tu equipo. La opción `synchronize: true` permite que TypeORM sincronice automáticamente las entidades con la base de datos durante el desarrollo. No se recomienda utilizarla en producción.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Instalación
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Ejecución
 
-## Resources
+```bash
+# Modo desarrollo
+npm run start:dev
 
-Check out a few resources that may come in handy when working with NestJS:
+# Modo normal
+npm run start
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Compilar el proyecto
+npm run build
 
-## Support
+# Ejecutar la versión compilada
+npm run start:prod
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+La API estará disponible en:
 
-## Stay in touch
+```text
+http://localhost:3000
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Endpoints esperados
 
-## License
+Cuando el CRUD esté implementado, la API deberá ofrecer los siguientes endpoints:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+| Método | Endpoint | Acción |
+|---|---|---|
+| GET | `/usuarios` | Listar usuarios |
+| GET | `/usuarios/:id` | Consultar un usuario |
+| POST | `/usuarios` | Crear un usuario |
+| PUT | `/usuarios/:id` | Actualizar un usuario |
+| DELETE | `/usuarios/:id` | Eliminar un usuario |
+
+## Ejemplo de usuario
+
+### Crear usuario
+
+```json
+{
+  "nombre": "Laura Gómez",
+  "correo": "laura.gomez@correo.com",
+  "telefono": "3001234567"
+}
+```
+
+### Actualizar usuario
+
+```json
+{
+  "nombre": "Laura Gómez Pérez",
+  "correo": "laura.gomez@correo.com",
+  "telefono": "3119876543",
+  "activo": true
+}
+```
+
+## Pruebas
+
+```bash
+npm run test
+npm run test:watch
+npm run test:cov
+npm run test:e2e
+```
+
+## Estado del proyecto
+
+Actualmente se encuentran creadas la entidad `Usuario`, los DTOs, las interfaces, el módulo, el controller y el service base. Está pendiente completar la integración del repository con TypeORM, registrar correctamente las dependencias y desarrollar los endpoints CRUD.
+
+## Entrega del taller
+
+La entrega debe incluir:
+
+1. Proyecto NestJS funcional.
+2. Conexión con MySQL.
+3. CRUD completo de usuarios.
+4. Diagrama de la arquitectura implementada.
+5. README con instrucciones de ejecución.
+6. Respuestas a las preguntas de análisis.
+7. Al menos dos mejoras adicionales del reto propuesto.

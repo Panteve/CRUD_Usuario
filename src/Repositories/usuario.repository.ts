@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ActualizarUsuarioDto } from 'src/DTOs/actualizar-usuario.dto';
+import { CrearUsuarioDto } from 'src/DTOs/crear-usuario.dto';
 import { Usuario } from 'src/Entities/usuario.entity';
 import { IUsuarioRepository } from 'src/Interfaces/repository-usuario.interface';
 import { Repository } from 'typeorm';
@@ -10,6 +12,9 @@ export class UsuarioRepository implements IUsuarioRepository {
     @InjectRepository(Usuario)
     private readonly repository: Repository<Usuario>,
   ) {}
+  obternerPorCorreo(correo: string): Promise<Usuario | null> {
+    return this.repository.findOneBy({ Correo: correo });
+  }
 
   obtenerTodos(): Promise<Usuario[]> {
     return this.repository.find();
@@ -23,11 +28,11 @@ export class UsuarioRepository implements IUsuarioRepository {
     return this.repository.findOneBy({ Correo: correo });
   }
 
-  crear(usuario: Usuario): Promise<Usuario> {
+  crear(usuario: CrearUsuarioDto): Promise<Usuario> {
     return this.repository.save(usuario);
   }
 
-  async actualizar(usuario: Usuario): Promise<boolean | null> {
+  async actualizar(usuario: ActualizarUsuarioDto): Promise<boolean | null> {
     const savedUsuario = await this.repository.save(usuario);
     return savedUsuario ? true : null;
   }

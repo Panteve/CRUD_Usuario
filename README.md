@@ -2,6 +2,8 @@
 
 API REST para gestionar usuarios, desarrollada para el Taller Práctico No. 3 de Arquitectura de Software con NestJS, TypeScript, TypeORM y MySQL.
 
+**Trabajo realizado por:** Diego Rojas y Brian Alba.
+
 ## Instalación y ejecución
 
 ### 1. Requisitos previos

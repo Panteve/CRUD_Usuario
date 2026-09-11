@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CrearUsuarioDto } from 'src/DTOs/crear-usuario.dto';
 import { Usuario } from 'src/Entities/usuario.entity';
 import { IUsuarioRepository } from 'src/Interfaces/repository-usuario.interface';
 import { Repository } from 'typeorm';
@@ -11,7 +10,7 @@ export class UsuarioRepository implements IUsuarioRepository {
     @InjectRepository(Usuario)
     private readonly repository: Repository<Usuario>,
   ) {}
-  obternerPorCorreo(correo: string): Promise<Usuario | null> {
+  obtenerPorCorreo(correo: string): Promise<Usuario | null> {
     return this.repository.findOneBy({ Correo: correo });
   }
 
@@ -23,7 +22,7 @@ export class UsuarioRepository implements IUsuarioRepository {
     return this.repository.findOneBy({ Id: id });
   }
 
-  crear(usuario: CrearUsuarioDto): Promise<Usuario> {
+  crear(usuario: Usuario): Promise<Usuario> {
     return this.repository.save(usuario);
   }
 

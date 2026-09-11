@@ -5,6 +5,7 @@ import { UsuarioRepository } from 'src/Repositories/usuario.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Usuario } from 'src/Entities/usuario.entity';
 import { USUARIO_REPOSITORY } from 'src/Interfaces/repository-usuario.interface';
+import { USUARIO_SERVICE } from 'src/Interfaces/service-usuario.interface';
 
 @Module({
   controllers: [UsuariosController],
@@ -12,6 +13,7 @@ import { USUARIO_REPOSITORY } from 'src/Interfaces/repository-usuario.interface'
     UsuariosService,
     UsuarioRepository,
     { provide: USUARIO_REPOSITORY, useExisting: UsuarioRepository },
+    { provide: USUARIO_SERVICE, useExisting: UsuariosService },
   ],
   imports: [TypeOrmModule.forFeature([Usuario])],
 })

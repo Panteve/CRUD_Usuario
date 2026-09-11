@@ -1,11 +1,13 @@
 import { ActualizarUsuarioDto } from 'src/DTOs/actualizar-usuario.dto';
 import { CrearUsuarioDto } from 'src/DTOs/crear-usuario.dto';
-import { Usuario } from 'src/Entities/usuario.entity';
+import { UsuarioResponseDto } from 'src/DTOs/response-usuario.dto';
+
+export const USUARIO_SERVICE = Symbol('USUARIO_SERVICE');
 
 export interface IUsuarioService {
-  obtenerTodos(): Promise<Usuario[]>;
-  obtenerPorId(id: number): Promise<Usuario | null>;
-  crear(usuario: CrearUsuarioDto): Promise<Usuario>;
+  obtenerTodos(): Promise<UsuarioResponseDto[]>;
+  obtenerPorId(id: number): Promise<UsuarioResponseDto | null>;
+  crear(usuario: CrearUsuarioDto): Promise<UsuarioResponseDto>;
   actualizar(
     id: number,
     usuario: ActualizarUsuarioDto,

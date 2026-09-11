@@ -14,7 +14,7 @@ export class Usuario {
   @Column()
   Telefono: string;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   FechaCreacion: Date;
 
   @Column({ default: true })

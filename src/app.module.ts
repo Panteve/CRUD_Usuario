@@ -12,7 +12,7 @@ import { UsuariosModule } from './modules/usuarios.module';
       host: 'localhost',
       port: 3307,
       username: 'root',
-      password: 'root',
+      password: '',
       database: 'flavio',
       entities: [Usuario],
       synchronize: true,

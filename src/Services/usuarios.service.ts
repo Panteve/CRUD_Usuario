@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ActualizarUsuarioDto } from 'src/DTOs/actualizar-usuario.dto';
 import { CrearUsuarioDto } from 'src/DTOs/crear-usuario.dto';
 import { IUsuarioService } from 'src/Interfaces/service-usuario.interface';
-import { UsuarioRepository } from 'src/Repositories/usuario.repository';
+import { USUARIO_REPOSITORY } from 'src/Interfaces/repository-usuario.interface';
+import type { IUsuarioRepository } from 'src/Interfaces/repository-usuario.interface';
 
 @Injectable()
 export class UsuariosService implements IUsuarioService {
-  constructor(private readonly usuarioRepository: UsuarioRepository) {}
+  constructor(
+    @Inject(USUARIO_REPOSITORY)
+    private readonly usuarioRepository: IUsuarioRepository,
+  ) {}
 
   obtenerTodos() {
     return this.usuarioRepository.obtenerTodos();
@@ -30,7 +34,8 @@ export class UsuariosService implements IUsuarioService {
   async actualizar(id: number, usuario: ActualizarUsuarioDto) {
     const existingUser = await this.usuarioRepository.obtenerPorId(id);
     if (!existingUser) return false;
-    const updatedUser = await this.usuarioRepository.actualizar(usuario);
+    Object.assign(existingUser, usuario);
+    const updatedUser = await this.usuarioRepository.actualizar(existingUser);
     return updatedUser;
   }
 

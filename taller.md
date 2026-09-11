@@ -2,6 +2,8 @@
 
 ## De la Arquitectura al Código: CRUD de Usuarios en .NET y SQL Server
 
+> **Nota de implementación:** aunque esta guía presenta los ejemplos en .NET, el profesor autorizó desarrollar el taller en **NestJS con TypeScript**. En esa adaptación se debe conservar la misma separación de responsabilidades: `Controller → Service → Repository → TypeORM/DataSource → base de datos`; los DTOs, interfaces y la inyección de dependencias siguen siendo obligatorios.
+
 #### Software Architecture-Ingeniería de Software-Uniempresarial
 
 *.NET 8 Web API | C# | Entity Framework Core | SQL Server | Swagger*

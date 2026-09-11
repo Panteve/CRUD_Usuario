@@ -45,6 +45,8 @@ lerna-debug.log*
 # temp directory
 .temp
 .tmp
+/_docx_deps/
+/_docx_render/
 
 # Runtime data
 pids

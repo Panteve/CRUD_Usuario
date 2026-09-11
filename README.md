@@ -1,21 +1,90 @@
 # CRUD de Usuarios
 
-API REST para gestionar usuarios, desarrollada como parte del Taller Práctico No. 3 de Arquitectura de Software.
+API REST para gestionar usuarios, desarrollada para el Taller Práctico No. 3 de Arquitectura de Software con NestJS, TypeScript, TypeORM y MySQL.
 
-El proyecto utiliza **NestJS**, **TypeScript**, **TypeORM** y **MySQL**. La implementación busca aplicar separación de responsabilidades, inyección de dependencias, DTOs, interfaces y una arquitectura por capas.
+## Instalación y ejecución
 
-## Tecnologías
+### 1. Requisitos previos
 
-- Node.js
-- NestJS 11
-- TypeScript
-- TypeORM
-- MySQL
-- Jest para pruebas unitarias
+- Node.js instalado.
+- MySQL instalado y ejecutándose.
+- Un schema de MySQL creado para el proyecto.
+
+### 2. Configurar la base de datos
+
+En `src/app.module.ts`, ajusta los datos de conexión a los de tu instalación local de MySQL:
+
+```ts
+TypeOrmModule.forRoot({
+  type: 'mysql',
+  host: 'localhost',
+  port: 3307,
+  username: 'root',
+  password: '',
+  database: 'flavio',
+  entities: [Usuario],
+  synchronize: true,
+});
+```
+
+El valor de `database` debe ser el nombre exacto de tu schema. La opción `synchronize: true` crea o actualiza las tablas automáticamente durante el desarrollo; no debe usarse en producción.
+
+### 3. Instalar dependencias
+
+Desde la carpeta del proyecto, ejecuta:
+
+```bash
+npm install
+```
+
+### 4. Iniciar la API
+
+```bash
+# Modo desarrollo: se reinicia al guardar cambios
+npm run start:dev
+
+# Modo normal
+npm run start
+```
+
+La API queda disponible en `http://localhost:3000` y Swagger en `http://localhost:3000/doc`.
+
+## Endpoints
+
+Todos los endpoints usan el prefijo `/api`:
+
+| Método | Endpoint | Acción |
+|---|---|---|
+| GET | `/api/usuarios` | Listar usuarios |
+| GET | `/api/usuarios/:id` | Consultar un usuario |
+| POST | `/api/usuarios` | Crear un usuario |
+| PUT | `/api/usuarios/:id` | Actualizar un usuario |
+| DELETE | `/api/usuarios/:id` | Eliminar un usuario |
+
+## Ejemplos de datos
+
+### Crear usuario
+
+```json
+{
+  "Nombre": "Laura Gómez",
+  "Correo": "laura.gomez@correo.com",
+  "Telefono": "3001234567"
+}
+```
+
+### Actualizar usuario
+
+```json
+{
+  "Nombre": "Laura Gómez Pérez",
+  "Correo": "laura.gomez@correo.com",
+  "Telefono": "3119876543",
+  "Activo": true
+}
+```
 
 ## Arquitectura
-
-El recorrido de una petición es:
 
 ```text
 Cliente / Swagger
@@ -31,147 +100,35 @@ TypeORM
 MySQL
 ```
 
-### Responsabilidad de cada capa
+- **Controller:** recibe las peticiones HTTP y devuelve respuestas.
+- **Service:** implementa casos de uso y reglas de negocio.
+- **Repository:** gestiona la persistencia mediante TypeORM.
+- **Entity:** representa la tabla de usuarios.
+- **DTOs:** definen los datos de entrada y salida.
+- **Interfaces y tokens:** desacoplan controller, service y repository.
 
-- **Controller:** recibe las peticiones HTTP y devuelve las respuestas.
-- **Service:** contiene los casos de uso y las reglas de negocio.
-- **Repository:** encapsula las operaciones de persistencia con TypeORM.
-- **Entity:** representa la tabla de usuarios en MySQL.
-- **DTOs:** definen los datos de entrada y salida de la API.
-- **Interfaces:** definen los contratos de los servicios y repositorios.
-
-## Estructura actual
+## Estructura
 
 ```text
 src/
-├── Controllers/
-│   └── usuarios.controller.ts
+├── Controllers/usuarios.controller.ts
 ├── DTOs/
-│   ├── actualizar-usuario.dto.ts
-│   ├── crear-usuario.dto.ts
-│   └── response-usuario.dto.ts
-├── Entities/
-│   └── usuario.entity.ts
+├── Entities/usuario.entity.ts
 ├── Interfaces/
-│   ├── repository-usuario.interface.ts
-│   └── service-usuario.interface.ts
-├── Repositories/
-│   └── usuario.repository.ts
-├── Services/
-│   └── usuarios.service.ts
-├── modules/
-│   └── usuarios.module.ts
+├── Repositories/usuario.repository.ts
+├── Services/usuarios.service.ts
+├── modules/usuarios.module.ts
 ├── app.module.ts
 └── main.ts
 ```
 
-## Requisitos previos
-
-- Node.js instalado.
-- MySQL instalado y ejecutándose localmente.
-- Una base de datos MySQL creada.
-
-## Configuración de MySQL
-
-Actualmente la conexión está configurada en `src/app.module.ts` con estos valores:
-
-```ts
-{
-  type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: 'root',
-  database: 'test',
-}
-```
-
-Cambia estos valores según la configuración de MySQL de tu equipo. La opción `synchronize: true` permite que TypeORM sincronice automáticamente las entidades con la base de datos durante el desarrollo. No se recomienda utilizarla en producción.
-
-## Instalación
+## Otros comandos
 
 ```bash
-npm install
-```
-
-## Ejecución
-
-```bash
-# Modo desarrollo
-npm run start:dev
-
-# Modo normal
-npm run start
-
-# Compilar el proyecto
+# Compilar
 npm run build
 
 # Ejecutar la versión compilada
 npm run start:prod
+
 ```
-
-La API estará disponible en:
-
-```text
-http://localhost:3000
-```
-
-## Endpoints esperados
-
-Cuando el CRUD esté implementado, la API deberá ofrecer los siguientes endpoints:
-
-| Método | Endpoint | Acción |
-|---|---|---|
-| GET | `/usuarios` | Listar usuarios |
-| GET | `/usuarios/:id` | Consultar un usuario |
-| POST | `/usuarios` | Crear un usuario |
-| PUT | `/usuarios/:id` | Actualizar un usuario |
-| DELETE | `/usuarios/:id` | Eliminar un usuario |
-
-## Ejemplo de usuario
-
-### Crear usuario
-
-```json
-{
-  "nombre": "Laura Gómez",
-  "correo": "laura.gomez@correo.com",
-  "telefono": "3001234567"
-}
-```
-
-### Actualizar usuario
-
-```json
-{
-  "nombre": "Laura Gómez Pérez",
-  "correo": "laura.gomez@correo.com",
-  "telefono": "3119876543",
-  "activo": true
-}
-```
-
-## Pruebas
-
-```bash
-npm run test
-npm run test:watch
-npm run test:cov
-npm run test:e2e
-```
-
-## Estado del proyecto
-
-Actualmente se encuentran creadas la entidad `Usuario`, los DTOs, las interfaces, el módulo, el controller y el service base. Está pendiente completar la integración del repository con TypeORM, registrar correctamente las dependencias y desarrollar los endpoints CRUD.
-
-## Entrega del taller
-
-La entrega debe incluir:
-
-1. Proyecto NestJS funcional.
-2. Conexión con MySQL.
-3. CRUD completo de usuarios.
-4. Diagrama de la arquitectura implementada.
-5. README con instrucciones de ejecución.
-6. Respuestas a las preguntas de análisis.
-7. Al menos dos mejoras adicionales del reto propuesto.

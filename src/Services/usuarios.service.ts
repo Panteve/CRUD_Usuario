@@ -20,13 +20,23 @@ export class UsuariosService implements IUsuarioService {
       .then((usuarios) => usuarios.map((usuario) => this.mapear(usuario)));
   }
 
+  async buscarPorNombre(nombre: string) {
+    const existingUser = await this.usuarioRepository.buscarPorNombre(nombre);
+    return existingUser ? this.mapear(existingUser) : null;
+  }
+
+  async buscarPorCorreo(correo: string) {
+    const existingUser = await this.usuarioRepository.buscarPorCorreo(correo);
+    return existingUser ? this.mapear(existingUser) : null;
+  }
+
   async obtenerPorId(id: number) {
     const usuario = await this.usuarioRepository.obtenerPorId(id);
     return usuario ? this.mapear(usuario) : null;
   }
 
   async crear(usuario: CrearUsuarioDto) {
-    const existingUser = await this.usuarioRepository.obtenerPorCorreo(
+    const existingUser = await this.usuarioRepository.buscarPorCorreo(
       usuario.Correo,
     );
     if (existingUser) {

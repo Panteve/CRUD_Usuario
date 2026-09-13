@@ -18,6 +18,14 @@ export class UsuarioRepository implements IUsuarioRepository {
     return this.repository.find();
   }
 
+  async buscarPorNombre(nombre: string): Promise<Usuario | null> {
+    return await this.repository.findOneBy({ Nombre: nombre });
+  }
+
+  async buscarPorCorreo(correo: string): Promise<Usuario | null> {
+    return await this.repository.findOneBy({ Correo: correo });
+  }
+
   obtenerPorId(id: number): Promise<Usuario | null> {
     return this.repository.findOneBy({ Id: id });
   }

@@ -14,6 +14,8 @@ import {
   Put,
 } from '@nestjs/common';
 import { ActualizarUsuarioDto } from 'src/DTOs/actualizar-usuario.dto';
+import { BuscarPorCorreoParamDto } from 'src/DTOs/buscar-por-correo-param.dto';
+import { BuscarPorNombreParamDto } from 'src/DTOs/buscar-por-nombre-param.dto';
 import { CrearUsuarioDto } from 'src/DTOs/crear-usuario.dto';
 import { USUARIO_SERVICE } from 'src/Interfaces/service-usuario.interface';
 import type { IUsuarioService } from 'src/Interfaces/service-usuario.interface';
@@ -28,6 +30,17 @@ export class UsuariosController {
   async obtenerTodos() {
     return await this.usuariosService.obtenerTodos();
   }
+
+  @Get('nombre/:nombre')
+  async buscarPorNombre(@Param() params: BuscarPorNombreParamDto) {
+    return await this.usuariosService.buscarPorNombre(params.nombre);
+  }
+
+  @Get('correo/:correo')
+  async buscarPorCorreo(@Param() params: BuscarPorCorreoParamDto) {
+    return await this.usuariosService.buscarPorCorreo(params.correo);
+  }
+
   @Post()
   async crear(@Body() usuario: CrearUsuarioDto) {
     try {

@@ -11,23 +11,23 @@ export class UsuarioRepository implements IUsuarioRepository {
     private readonly repository: Repository<Usuario>,
   ) {}
   obtenerPorCorreo(correo: string): Promise<Usuario | null> {
-    return this.repository.findOneBy({ Correo: correo });
+    return this.repository.findOneBy({ Correo: correo, Activo: true });
   }
 
   obtenerTodos(): Promise<Usuario[]> {
-    return this.repository.find();
+    return this.repository.findBy({ Activo: true });
   }
 
   async buscarPorNombre(nombre: string): Promise<Usuario | null> {
-    return await this.repository.findOneBy({ Nombre: nombre });
+    return await this.repository.findOneBy({ Nombre: nombre, Activo: true });
   }
 
   async buscarPorCorreo(correo: string): Promise<Usuario | null> {
-    return await this.repository.findOneBy({ Correo: correo });
+    return await this.repository.findOneBy({ Correo: correo, Activo: true });
   }
 
   obtenerPorId(id: number): Promise<Usuario | null> {
-    return this.repository.findOneBy({ Id: id });
+    return this.repository.findOneBy({ Id: id, Activo: true });
   }
 
   crear(usuario: Usuario): Promise<Usuario> {
@@ -40,7 +40,8 @@ export class UsuarioRepository implements IUsuarioRepository {
   }
 
   async eliminar(usuario: Usuario): Promise<boolean> {
-    const removedUsuario = await this.repository.remove(usuario);
-    return removedUsuario ? true : false;
+    usuario.Activo = false;
+    const usuarioActualizado = await this.repository.save(usuario);
+    return Boolean(usuarioActualizado);
   }
 }
